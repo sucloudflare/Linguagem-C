@@ -1,0 +1,164 @@
+words[0] refere-se ao primeiro elemento, ou valor, da matriz words, que é uma string e, portanto, words[0][0] se refere ao primeiro elemento dessa string, que é um caractere.
+
+Portanto, um array de strings é apenas um array de arrays de caracteres.
+
+Agora podemos combinar o que vimos para escrever um programa que pode capitalizar letras:
+
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    string s = get_string("Antes: ");
+    printf("Depois:  ");
+    for (int i = 0, n = strlen(s); i < n; i++)
+    {
+        if (s[i] >= 'a' && s[i] <= 'z')
+        {
+            printf("%c", s[i] - 32);
+        }
+        else
+        {
+            printf("%c", s[i]);
+        }
+    }
+    printf("\n");
+}
+
+
+Primeiro, obtemos uma string s do usuário. Então, para cada caractere na string, se estiver em minúsculas (o que significa que tem um valor entre o de a e z), nós o convertemos em maiúsculas. Caso contrário, apenas imprimiremos.
+
+Podemos converter uma letra minúscula em seu equivalente maiúsculo subtraindo a diferença entre seus valores ASCII. (Sabemos que as letras minúsculas têm um valor ASCII mais alto do que as letras maiúsculas e a diferença é a mesma entre as mesmas letras, portanto, podemos subtrair para obter uma letra maiúscula de uma letra minúscula.)
+
+Acontece que existe outra biblioteca, ctype.h, que podemos usar:
+
+#include <cs50.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    string s = get_string("Antes: ");
+    printf("Depois:  ");
+    for (int i = 0, n = strlen(s); i < n; i++)
+    {
+        if (islower(s[i]))
+        {
+            printf("%c", toupper(s[i]));
+        }
+        else
+        {
+            printf("%c", s[i]);
+        }
+    }
+    printf("\n");
+}
+
+
+Agora, nosso código está mais legível e provavelmente correto, já que outros escreveram e testaram essas funções para nós.
+
+Podemos simplificar ainda mais, e apenas passar cada caractere para o toupper, já que ele não altera os caracteres não minúsculos:
+
+#include <cs50.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    string s = get_string("Antes: ");
+    printf("Depois:  ");
+    for (int i = 0, n = strlen(s); i < n; i++)
+    {
+        printf("%c", toupper(s[i]));
+    }
+    printf("\n");
+}
+
+
+Podemos usar as páginas de manual do CS50 para encontrar e aprender sobre as funções comuns da biblioteca. Pesquisando nas páginas de manual, vemos que toupper() é uma função, entre outras, de uma biblioteca chamada ctype, que podemos usar.
+
+ 
+
+Argumentos de linha de comando
+
+Os nossos próprios programas também podem aceitar argumentos de linha de comando ou palavras adicionadas após o nome do nosso programa no próprio comando.
+
+Em argv.c, mudamos a aparência de nossa função principal(main):
+
+#include <cs50.h>
+#include <stdio.h>
+
+int main(int argc, string argv[])
+{
+    if (argc == 2)
+    {
+        printf("oi, %s\n", argv[1]);
+    }
+    else
+    {
+        printf("olá, mundo\n");
+    }
+}
+
+
+argc e argv são duas variáveis ​​que nossa função main obterá automaticamente quando nosso programa for executado a partir da linha de comando. argc é a contagem de argumentos , ou número de argumentos, e argv, vetor de argumentos (ou lista de argumentos), uma matriz de strings.
+
+O primeiro argumento, argv[0], é o nome do nosso programa (a primeira palavra digitada, como ./hello). Neste exemplo, verificamos se temos dois argumentos e imprimimos o segundo se houver.
+
+Por exemplo, se executarmos ./argv David, receberemos Oi, David impresso, já que digitamos David como a segunda palavra em nosso comando.
+
+Também podemos imprimir cada caractere individualmente:
+
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, string argv[])
+{
+    if (argc == 2)
+    {
+        for (int i = 0, n = strlen(argv[1]); i < n; i++)
+        {
+            printf("%c\n", argv[1][i]);
+        }
+    }
+}
+
+
+Usaremos argv[1][i] para acessar cada caractere no primeiro argumento de nosso programa.
+
+Acontece que nossa função main também retorna um valor inteiro. Por padrão, nossa função main retorna 0 para indicar que nada deu errado, mas podemos escrever um programa para retornar um valor diferente:
+
+#include <cs50.h>
+#include <stdio.h>
+
+int main(int argc, string argv[])
+{
+    if (argc != 2)
+    {
+        printf("Argumento ausente\n");
+        return 1;
+    }
+    printf("oi, %s\n", argv[1]);
+    return 0;
+}
+
+
+O valor de retorno de main em nosso programa é chamado de código de saída , geralmente usado para indicar códigos de erro. (Vamos escrever o return 0 explicitamente no final do nosso programa aqui, mesmo que tecnicamente não seja necessário.)
+
+Conforme escrevemos programas mais complexos, códigos de erro como este podem nos ajudar a determinar o que deu errado, mesmo que não seja visível ou significativo para o usuário
+
+ 
+
+Aplicações
+
+Agora que sabemos como trabalhar com strings em nossos programas, bem como códigos escritos por outros em bibliotecas, podemos analisar parágrafos de texto quanto ao seu nível de legibilidade, com base em fatores como o comprimento e a complexidade das palavras e frases.
+
+A criptografia é a arte de embaralhar ou ocultar informações. Se quisermos enviar uma mensagem a alguém, podemos criptografar ou, de alguma forma, embaralhar essa mensagem para que seja difícil para outras pessoas lerem. A mensagem original, ou input para nosso algoritmo, é chamada de plaintext (texto simples), e a mensagem criptografada, ou output, é chamada de ciphertext (texto cifrado). E o algoritmo que faz o embaralhamento é chamado de cifra . Uma cifra geralmente requer outro input além do texto simples. Uma chave, como um número, é um outro input que e mantida em segredo.
+
+Por exemplo, se quisermos enviar uma mensagem como I L O V E Y O U, podemos primeiro convertê-la para ASCII: 73 76 79 86 69 89 79 85. Em seguida, podemos criptografá-la com uma chave de apenas 1 e um algoritmo simples, onde basta adicionar a chave a cada valor: 74 77 80 87 70 90 80 86. Então, o texto cifrado depois de converter os valores de volta para ASCII seria J M P W F Z P V. Para descriptografar isso, alguém teria que saber que a chave é 1, e para subtraí-lo de cada personagem!
+
+Aplicaremos esses conceitos em nossas seções e tarefas!
