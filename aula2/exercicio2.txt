@@ -1,0 +1,126 @@
+Exercício 1: Caesar
+
+Implemente um programa que criptografa mensagens usando a cifra de César, conforme a seguir.
+
+$ ./caesar 13
+plaintext: HELLO
+ciphertext: URYYB
+
+Lembre-se que plaintext significa texto simples e ciphertext é o texto cifrado! 
+
+ 
+Background
+
+Supostamente, César (sim, aquele César) costumava “criptografar” (ou seja, ocultar de forma reversível) mensagens confidenciais deslocando cada letra nelas em algum número de lugares. Por exemplo, ele pode escrever A como B, B como C, C como D, ..., e, agrupando em ordem alfabética, Z como A. E então, para dizer HELLO para alguém, César pode escrever IFMMP. Ao receber essas mensagens de César, os destinatários teriam que “decifrá-las” deslocando as letras na direção oposta no mesmo número de lugares.
+
+O segredo desse “criptosistema” dependia apenas de César e dos destinatários saberem de um segredo, o número de lugares pelos quais César havia mudado suas cartas (por exemplo, 1). Não é particularmente seguro para os padrões modernos, mas, ei, se você é talvez o primeiro no mundo a fazer isso, bastante seguro!
+
+O texto não criptografado é geralmente chamado de texto simples . O texto criptografado é geralmente chamado de texto cifrado . E o segredo usado é chamado de chave .
+
+Para ser claro, então, aqui está como criptografar HELLO com uma chave de 1 resulta em IFMMP :
+
+Mais formalmente, o algoritmo de César (isto é, cifra) criptografa mensagens “girando” cada letra em k posições. Mais formalmente, se p é algum texto simples (ou seja, uma mensagem não criptografada), pi é o i-ésimo caractere em p , e k é uma chave secreta (ou seja, um inteiro não negativo), então cada letra, c i , em o texto cifrado, c , é calculado como
+
+                                                                               c i= (p i+ k)% 26
+
+em que %26 aqui significa "resto ao dividir por 26." Essa fórmula talvez faça a cifra parecer mais complicada do que é, mas na verdade é apenas uma maneira concisa de expressar o algoritmo com precisão. De fato, para fins de discussão, pense em A (ou a) como 0, B (ou b) como 1, ..., H (ou h) como 7, I (ou i) como 8, ... e Z (ou z) como 25. Suponha que César apenas queira dizer Oi para alguém confidencialmente usando, desta vez, uma chave, k , de 3. E então seu texto simples, p , é Hi, em cujo caso o primeiro caractere de seu texto simples, p 0 , é H (também conhecido como 7), e o segundo caractere de seu texto simples, p 1 , é i (também conhecido como 8). O primeiro caractere de seu texto cifrado, c 0 , é portanto K, e o segundo caractere de seu texto cifrado, c 1 , é assim L. Você pode ver por quê?
+
+Vamos escrever um programa chamado ceasar que permite criptografar mensagens usando a cifra de César. No momento em que o usuário executa o programa, ele deve decidir, fornecendo um argumento de linha de comando, qual deve ser a chave na mensagem secreta que fornecerá no tempo de execução. Não devemos necessariamente presumir que a chave do usuário será um número; embora você possa assumir que, se for um número, será um inteiro positivo.
+
+Aqui estão alguns exemplos de como o programa pode funcionar. Por exemplo, se o usuário inserir uma chave de 1 e um texto simples de HELLO :
+
+$ ./caesar 1
+plaintext:  HELLO
+ciphertext: IFMMP
+
+Veja como o programa pode funcionar se o usuário fornecer uma chave 13 e um texto simples de hello, world : 
+
+$ ./caesar 13
+plaintext:  hello, world
+ciphertext: uryyb, jbeyq
+
+Observe que nem a vírgula nem o espaço foram "deslocados" pela cifra. Gire apenas caracteres alfabéticos!
+
+Que tal mais um? Veja como o programa pode funcionar se o usuário fornecer uma chave 13 novamente, com um texto simples mais complexo: 
+
+$ ./caesar 13
+plaintext:  be sure to drink your Ovaltine
+ciphertext: or fher gb qevax lbhe Binygvar
+
+Observe que a caixa da mensagem original foi preservada. As letras minúsculas permanecem minúsculas e as maiúsculas permanecem maiúsculas.
+
+E se um usuário não cooperar?
+
+$ ./caesar HELLO
+Usage: ./caesar key
+
+Ou realmente não coopera?
+
+$ ./caesar
+Usage: ./caesar key
+
+Ou mesmo ...
+
+$ ./caesar 1 2 3
+Usage: ./caesar key
+
+Este vídeo irá te ajudar a entender o problema ;)
+
+
+Atenção: para adicionar legendas ao vídeo clique no botão CC localizado no Player e selecione a opção "Português (Brasil)".
+
+
+ 
+Especificação
+
+Projete e implemente um programa, o caesar , que criptografa mensagens usando a cifra de César.
+
+    Implemente seu programa em um arquivo denominado caesar.c em um diretório denominado caesar .
+
+    Seu programa deve aceitar um único argumento de linha de comando, um inteiro não negativo. Vamos chamá-lo de k para fins de discussão.
+
+    Se o seu programa for executado sem nenhum argumento de linha de comando ou com mais de um argumento de linha de comando, seu programa deve imprimir uma mensagem de erro de sua escolha (com printf ) e retornar de main um valor de 1 (o que tende a significar um erro ) imediatamente.
+
+    Se algum dos caracteres do argumento da linha de comando não for um dígito decimal, seu programa deve imprimir a mensagem Use: ./caesar key e retornar de main o valor 1 .
+
+    Não suponha que k será menor ou igual a 26. Seu programa deve funcionar para todos os valores integrais não negativos de k menores que 2 ^ 31 - 26. Em outras palavras, você não precisa se preocupar se seu programa eventualmente quebra se o usuário escolher um valor para k que é muito grande ou quase grande para caber em um int . (Lembre-se de que um int pode estourar.) Mas, mesmo se k for maior que 26, os caracteres alfabéticos na entrada do programa devem permanecer caracteres alfabéticos na saída do programa. Por exemplo, se k é 27, A não deve se tornar [ embora [ esteja a 27 posições de A em ASCII, por http://www.asciichart.com/[asciichart.com]; A deve tornar-se B , já que B esta a 27 posições de A , desde que você revolva em torno de Z a A.
+
+    Seu programa deve produzir plaintext: (sem uma nova linha) [texto simples] e então solicitar ao usuário uma string de texto simples (usando get_string ).
+
+    Seu programa deve produzir ciphertext: (sem uma nova linha) [texto cifrado] seguido pelo texto cifrado correspondente do texto simples, com cada caractere alfabético no texto simples “girado” por k posições; os caracteres não alfabéticos devem ser reproduzidos inalterados.
+
+    Seu programa deve preservar as letras maiúsculas e minúsculas: as letras maiúsculas, embora giradas, devem permanecer letras maiúsculas; as letras minúsculas, embora giradas, devem permanecer em minúsculas.
+
+    Após a saída do texto cifrado, você deve imprimir uma nova linha. Seu programa deve então sair retornando 0 de main.
+
+Como começar? Vamos abordar esse problema um passo de cada vez.
+Pseudocódigo
+
+Spoiler ;)
+
+Existe mais de uma forma para resolver esse exercício, esse spoiler aqui é apenas uma delas!1- Verifique se o programa foi executado com um argumento de linha de comando;
+2- Repita o argumento fornecido para garantir que todos os caracteres sejam dígitos;
+3- Converta o argumento da linha de comando de uma string para int
+4- Solicite plaintext: (texto simples) ao usuário
+5- Repita/Itere para cada caractere do plaintext: (texto simples)
+    1- Se é uma letra maiuscula, rotacione-a, preservando capitalização, e então imprima o caractere rotacionado.
+    2- Se é uma letra minúscula, rotacione-a, preservando capitalização, e então imprima o caractere rotacionado.
+    3-  Se não for nenhum, imprima o caractere como está
+6- Imprimir uma nova linha
+
+Não há problema em editar o seu depois de ver este pseudocódigo aqui, mas não simplesmente copie/cole o nosso no seu. Ok?
+
+ 
+
+ 
+Como testar seu código no IDE do CS50?
+
+ 
+
+Execute o seguinte para avaliar se seu código está correto usando check50. Mas certifique-se de compilar e testar você mesmo!
+
+check50 cs50/problems/2021/x/caesar
+
+Execute o seguinte para avaliar o style do seu código usando style50.
+
+style50 caesar.c
